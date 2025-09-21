@@ -2,7 +2,7 @@
 "use client";
 import { useParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { motion } from "framer-motion";
 
@@ -17,9 +17,11 @@ type Game = {
   board1: Cell[][];
   board2: Cell[][];
   turn: "player1" | "player2";
-  ready1: boolean;
-  ready2: boolean;
-  [key: string]: any;
+  ready1: boolean | null;
+  ready2: boolean | null;
+  player1?: string;
+  player2?: string;
+  [key: string]: unknown;
 };
 
 export default function GamePage() {
@@ -62,6 +64,7 @@ export default function GamePage() {
       };
     }, [id, playerNum, game]);
 
+
   useEffect(() => {
     if (!playerNum || !game) return;
     const iAmReady = (playerNum === 1 ? game.ready1 : game.ready2);
@@ -74,7 +77,7 @@ export default function GamePage() {
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [timer, playerNum, game]);
+  }, [timer, playerNum, game, handleAutoPlace]);
 
   useEffect(() => {
     if (!id || !user) return;
@@ -143,17 +146,17 @@ export default function GamePage() {
   const boardKey = playerNum === 1 ? "board1" : "board2";
   const readyKey = playerNum === 1 ? "ready1" : "ready2";
   // If unreadying, set to null (empty); if readying, set to true
-  const update: any = { [boardKey]: placementBoard, [readyKey]: nextReady ? true : null };
+  const update: Record<string, unknown> = { [boardKey]: placementBoard, [readyKey]: nextReady ? true : null };
   await supabase.from("games").update(update).eq("id", id);
   };
 
-  const handleAutoPlace = async () => {
+  const handleAutoPlace = useCallback(async () => {
     const autoBoard = randomPlaceShips();
     setPlacementBoard(autoBoard);
     const boardKey = playerNum === 1 ? "board1" : "board2";
     const readyKey = playerNum === 1 ? "ready1" : "ready2";
     await supabase.from("games").update({ [boardKey]: autoBoard, [readyKey]: true }).eq("id", id);
-  };
+  }, [playerNum, id, randomPlaceShips]);
 
   const canPlaceShip = (x: number, y: number, size: number, orientation: 'horizontal' | 'vertical') => {
     if (orientation === 'horizontal') {
@@ -357,23 +360,16 @@ export default function GamePage() {
             </div>
             <div className="grid grid-cols-10 gap-1 mb-2 scale-110 relative">
               {placementBoard.map((row, y) =>
-                row.map((cell, x) => {
-                  // Ship preview highlight
-                  let preview = false;
-                  if (currentShipIdx < shipsToPlace.length && canPlaceShip(x, y, shipsToPlace[currentShipIdx], orientation)) {
-                    preview = true;
-                  }
-                  return (
-                    <motion.div
-                      key={`placement-${x}-${y}`}
-                      className={`w-10 h-10 border-2 rounded-lg cursor-pointer flex items-center justify-center text-lg font-bold transition-all duration-100
-                        ${cell === "empty" ? `bg-gray-700 border-gray-600 hover:bg-cyan-900` : 'bg-cyan-500 border-cyan-300 shadow-lg'}
-                      `}
-                      whileHover={{ scale: 1.13 }}
-                      onClick={() => placeShip(x, y)}
-                    />
-                  );
-                })
+                row.map((cell, x) => (
+                  <motion.div
+                    key={`placement-${x}-${y}`}
+                    className={`w-10 h-10 border-2 rounded-lg cursor-pointer flex items-center justify-center text-lg font-bold transition-all duration-100
+                      ${cell === "empty" ? `bg-gray-700 border-gray-600 hover:bg-cyan-900` : 'bg-cyan-500 border-cyan-300 shadow-lg'}
+                    `}
+                    whileHover={{ scale: 1.13 }}
+                    onClick={() => placeShip(x, y)}
+                  />
+                ))
               )}
             </div>
             <div className="text-xs text-gray-400 mt-6">Kliknij, aby ustawić statek. <span className="text-cyan-300 font-bold">{orientation === 'horizontal' ? '← poziomo' : '↓ pionowo'}</span></div>
