@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { FaBook, FaBackspace } from "react-icons/fa";
+import Link from "next/link";
 
 export default function RulesPage() {
   return (
@@ -68,13 +69,13 @@ export default function RulesPage() {
 
         {/* Back button */}
         <div className="mt-8 flex justify-center">
-          <a
+          <Link
             href="/"
             className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-gray-700 bg-gradient-to-r from-cyan-600 to-cyan-500 text-white font-medium shadow-md hover:from-cyan-500 hover:to-cyan-400 transition"
           >
             <FaBackspace className="w-4 h-4" />
             <span>Powrót</span>
-          </a>
+          </Link>
         </div>
       </motion.div>
     </main>

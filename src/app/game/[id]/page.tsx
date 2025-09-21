@@ -44,27 +44,38 @@ export default function GamePage() {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   // Removed shooting state for instant UI
 
+
+
+
   // Polling: refresh board every 2s when it's not your turn
-    useEffect(() => {
-      if (!id || !playerNum || !game) return;
-      const isMyTurn = game.turn === `player${playerNum}`;
-      let interval: NodeJS.Timeout | null = null;
-      if (!isMyTurn) {
-        interval = setInterval(async () => {
-          const { data: updatedGame } = await supabase.from("games").select("*").eq("id", id).single();
-          if (updatedGame) {
-            setGame(updatedGame);
-            setPlayerBoard(playerNum === 1 ? updatedGame.board1 : updatedGame.board2);
-            setOpponentBoard(playerNum === 1 ? updatedGame.board2 : updatedGame.board1);
-          }
-        }, 2000);
-      }
-      return () => {
-        if (interval) clearInterval(interval);
-      };
-    }, [id, playerNum, game]);
+  useEffect(() => {
+    if (!id || !playerNum || !game) return;
+    const isMyTurn = game.turn === `player${playerNum}`;
+    let interval: NodeJS.Timeout | null = null;
+    if (!isMyTurn) {
+      interval = setInterval(async () => {
+        const { data: updatedGame } = await supabase.from("games").select("*").eq("id", id).single();
+        if (updatedGame) {
+          setGame(updatedGame);
+          setPlayerBoard(playerNum === 1 ? updatedGame.board1 : updatedGame.board2);
+          setOpponentBoard(playerNum === 1 ? updatedGame.board2 : updatedGame.board1);
+        }
+      }, 2000);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [id, playerNum, game]);
 
 
+
+
+  // ...other code...
+
+
+  // ...all other hooks and functions...
+
+  // Timer effect for auto placement, must be after handleAutoPlace
   useEffect(() => {
     if (!playerNum || !game) return;
     const iAmReady = (playerNum === 1 ? game.ready1 : game.ready2);
@@ -150,13 +161,30 @@ export default function GamePage() {
   await supabase.from("games").update(update).eq("id", id);
   };
 
-  const handleAutoPlace = useCallback(async () => {
-    const autoBoard = randomPlaceShips();
-    setPlacementBoard(autoBoard);
-    const boardKey = playerNum === 1 ? "board1" : "board2";
-    const readyKey = playerNum === 1 ? "ready1" : "ready2";
-    await supabase.from("games").update({ [boardKey]: autoBoard, [readyKey]: true }).eq("id", id);
-  }, [playerNum, id, randomPlaceShips]);
+
+  function handleAutoPlace() {
+    (async () => {
+      const autoBoard = randomPlaceShips();
+      setPlacementBoard(autoBoard);
+      const boardKey = playerNum === 1 ? "board1" : "board2";
+      const readyKey = playerNum === 1 ? "ready1" : "ready2";
+      await supabase.from("games").update({ [boardKey]: autoBoard, [readyKey]: true }).eq("id", id);
+    })();
+  }
+
+  useEffect(() => {
+    if (!playerNum || !game) return;
+    const iAmReady = (playerNum === 1 ? game.ready1 : game.ready2);
+    if (iAmReady) return;
+    if (timer <= 0) {
+      handleAutoPlace();
+      return;
+    }
+    timerRef.current = setTimeout(() => setTimer(timer - 1), 1000);
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [timer, playerNum, game, handleAutoPlace]);
 
   const canPlaceShip = (x: number, y: number, size: number, orientation: 'horizontal' | 'vertical') => {
     if (orientation === 'horizontal') {

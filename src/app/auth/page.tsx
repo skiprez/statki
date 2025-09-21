@@ -47,8 +47,14 @@ export default function AuthPage() {
           setError("Nie udało się zarejestrować.");
         }
       }
-    } catch (err: any) {
-      setError(err.errors?.[0]?.message || "Wystąpił błąd.");
+    } catch (err) {
+      if (typeof err === "object" && err !== null && "errors" in err && Array.isArray((err as { errors?: { message?: string }[] }).errors)) {
+        setError((err as { errors?: { message?: string }[] }).errors?.[0]?.message || "Wystąpił błąd.");
+      } else if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Wystąpił błąd.");
+      }
     }
   };
 
