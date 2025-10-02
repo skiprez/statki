@@ -1,0 +1,11 @@
+📖 Dokumentacja użytkownika (skrót)
+
+Wejdź na stronę /auth – zarejestruj się lub zaloguj.
+
+Po zalogowaniu trafisz na stronę startową – możesz rozpocząć grę.
+
+Kliknij „Zasady”, aby zapoznać się z instrukcją gry.
+
+W grze ustaw statki i strzelaj w pola przeciwnika.
+
+Gra kończy się, gdy zatopisz wszystkie statki przeciwnika.

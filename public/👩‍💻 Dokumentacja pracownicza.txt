@@ -1,0 +1,27 @@
+👩‍💻 Dokumentacja pracownicza
+
+Zespół projektowy:
+
+Hubert Kaftan
+
+Frontend (Next.js, Tailwind, Framer Motion).
+
+Implementacja stron startowej, zasad i autoryzacji.
+
+Animacje i UI.
+
+Jagoda Stępień
+
+Backend (logika gry, obsługa planszy, integracja z bazą).
+
+Przygotowanie dokumentacji użytkownika.
+
+Testowanie i optymalizacja aplikacji.
+
+Wspólne zadania:
+
+Integracja z Clerk.
+
+Deployment na Vercel.
+
+Wspólne testy gry i naprawa błędów.
