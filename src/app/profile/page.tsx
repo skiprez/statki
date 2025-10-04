@@ -1,5 +1,6 @@
 "use client";
 import { useUser } from "@clerk/nextjs";
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { FaUserCircle, FaEnvelope, FaLock, FaChartBar, FaTrophy, FaTimesCircle, FaPercent, FaUserEdit, FaArrowLeft } from "react-icons/fa";
@@ -41,12 +42,12 @@ export default function ProfilePage() {
 		<main className="min-h-screen text-gray-100 flex flex-col items-center justify-center bg-transparent px-4 py-8">
 			<div className="w-full max-w-4xl bg-black/30 border border-white/20 rounded-2xl shadow-xl backdrop-blur p-0 flex flex-col md:flex-row gap-0 md:gap-0 overflow-hidden relative">
 				{/* --- Return button --- */}
-				<a
+				<Link
 					href="/"
 					className="absolute top-4 right-4 flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 border border-white/20 hover:bg-cyan-500/80 hover:text-white transition font-semibold text-cyan-200 shadow z-20"
 				>
 					<FaArrowLeft /> Powrót
-				</a>
+				</Link>
 
 				{/* --- Left: User info/avatar and stats --- */}
 				<div className="md:w-1/3 w-full flex flex-col items-center justify-center bg-gradient-to-b from-cyan-900/40 via-blue-900/30 to-black/40 p-8 gap-6 border-b md:border-b-0 md:border-r border-white/10">
@@ -95,8 +96,16 @@ export default function ProfilePage() {
 									await emailObj.prepareVerification({ strategy: "email_code" });
 									changed = true;
 									alert("Na nowy email wysłano kod weryfikacyjny. Zweryfikuj email w panelu Clerk.");
-								} catch (err) {
-									alert("Błąd przy zmianie emaila: " + (err as any)?.errors?.[0]?.message || err);
+								} catch (err: unknown) {
+									let msg = "";
+									if (typeof err === "object" && err !== null && "errors" in err && Array.isArray((err as { errors?: { message?: string }[] }).errors)) {
+										msg = (err as { errors?: { message?: string }[] }).errors?.[0]?.message || String(err);
+									} else if (err instanceof Error) {
+										msg = err.message;
+									} else {
+										msg = String(err);
+									}
+									alert("Błąd przy zmianie emaila: " + msg);
 								}
 							}
 							// Password
@@ -104,8 +113,16 @@ export default function ProfilePage() {
 								try {
 									await user.updatePassword({ newPassword });
 									changed = true;
-								} catch (err) {
-									alert("Błąd przy zmianie hasła: " + (err as any)?.errors?.[0]?.message || err);
+								} catch (err: unknown) {
+									let msg = "";
+									if (typeof err === "object" && err !== null && "errors" in err && Array.isArray((err as { errors?: { message?: string }[] }).errors)) {
+										msg = (err as { errors?: { message?: string }[] }).errors?.[0]?.message || String(err);
+									} else if (err instanceof Error) {
+										msg = err.message;
+									} else {
+										msg = String(err);
+									}
+									alert("Błąd przy zmianie hasła: " + msg);
 								}
 							}
 							if (changed) alert("Zaktualizowano profil!");

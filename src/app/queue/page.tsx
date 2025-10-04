@@ -5,14 +5,23 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { useUser } from "@clerk/nextjs";
-import { motion } from "framer-motion";
+// import { motion } from "framer-motion";
+import Link from "next/link";
 import { FaArrowLeft, FaHashtag, FaRegCopy, FaUser } from "react-icons/fa";
 
 // Main Rooms Page for listing/joining/creating game rooms
 export default function RoomsPage() {
   const { user } = useUser();
   const router = useRouter();
-  const [rooms, setRooms] = useState<any[]>([]);
+  type Room = {
+    id: string;
+    player1: string;
+    player2?: string;
+    status: string;
+    result?: string;
+    [key: string]: unknown;
+  };
+  const [rooms, setRooms] = useState<Room[]>([]);
   // Holds stats and usernames for each player1
   const [playerStats, setPlayerStats] = useState<Record<string, { username: string; wins: number; losses: number }>>({});
   const [creating, setCreating] = useState(false);
@@ -32,7 +41,7 @@ export default function RoomsPage() {
       setRooms(data || []);
 
       // Get unique player1 ids
-      const player1Ids = Array.from(new Set((data || []).map((r: any) => r.player1).filter(Boolean)));
+  const player1Ids = Array.from(new Set((data || []).map((r: Room) => r.player1).filter(Boolean)));
       if (player1Ids.length === 0) return;
 
       // Fetch usernames from our API route (logic from route.ts)
@@ -99,7 +108,7 @@ export default function RoomsPage() {
   const handleCreateRoom = async () => {
     if (!user) return;
     setCreating(true);
-    const { data: created, error } = await supabase
+    const { error } = await supabase
       .from("games")
       .insert({ player1: user.id, status: "waiting", turn: "player1" })
       .select()
@@ -121,8 +130,8 @@ export default function RoomsPage() {
       .select()
       .single();
     setJoiningId(null);
-    if (updated && updated.id) {
-      router.push(`/game/${updated.id}`);
+    if (updated && (updated as Room).id) {
+      router.push(`/game/${(updated as Room).id}`);
     }
     if (error) {
       alert("Błąd przy dołączaniu do pokoju: " + error.message);
@@ -133,12 +142,12 @@ export default function RoomsPage() {
     <main className="min-h-screen w-full flex flex-col items-center justify-center bg-transparent px-4 py-8 text-gray-100">
       {/* Back button above the card, not overlapping */}
       <div className="w-full max-w-6xl flex justify-end mb-2">
-        <a
+        <Link
           href="/"
           className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 border border-white/20 hover:bg-cyan-500/80 hover:text-white transition font-semibold text-cyan-200 shadow z-20 mt-2 mr-2"
         >
           <FaArrowLeft /> Powrót
-        </a>
+        </Link>
       </div>
       <div className="relative w-full max-w-6xl mx-auto rounded-2xl shadow-2xl border border-white/20 bg-black/30 backdrop-blur flex flex-col overflow-hidden mt-0">
         <div className="flex flex-col gap-8 md:gap-12 p-6 md:p-12">

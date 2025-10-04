@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useSignIn, useSignUp, useClerk, useUser } from "@clerk/nextjs";
@@ -75,12 +76,12 @@ export default function AuthPage() {
     <main className="min-h-screen flex items-center justify-center bg-transparent px-4 py-8 text-gray-100">
       <div className="w-full max-w-lg bg-black/30 border border-white/20 rounded-2xl shadow-xl backdrop-blur p-0 flex flex-col overflow-hidden relative">
         {/* Return button */}
-        <a
+        <Link
           href="/"
           className="absolute top-4 right-4 flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 border border-white/20 hover:bg-cyan-500/80 hover:text-white transition font-semibold text-cyan-200 shadow z-20"
         >
           <FaArrowLeft /> Powrót
-        </a>
+        </Link>
         <div className="flex flex-col items-center justify-center py-10 px-8">
           <div className="mb-6 flex items-center justify-center">
             <div className="rounded-full bg-cyan-900/30 p-4 shadow-lg">

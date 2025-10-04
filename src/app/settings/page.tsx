@@ -1,5 +1,6 @@
 "use client";
 import { useUser } from "@clerk/nextjs";
+import Link from "next/link";
 import { useState } from "react";
 import { FaArrowLeft, FaPalette, FaBell, FaMoon, FaLanguage, FaSave } from "react-icons/fa";
 
@@ -25,12 +26,12 @@ export default function SettingsPage() {
     <main className="min-h-screen flex flex-col items-center justify-center bg-transparent px-4 py-8 text-gray-100">
       <div className="w-full max-w-xl bg-black/30 border border-white/20 rounded-2xl shadow-xl backdrop-blur p-8 flex flex-col gap-8 relative">
         {/* Return button */}
-        <a
+        <Link
           href="/"
           className="absolute top-4 right-4 flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 border border-white/20 hover:bg-cyan-500/80 hover:text-white transition font-semibold text-cyan-200 shadow z-20"
         >
           <FaArrowLeft /> Powrót
-        </a>
+        </Link>
         <h1 className="text-3xl font-extrabold text-center mb-2 bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-300 bg-clip-text text-transparent drop-shadow-lg flex items-center justify-center gap-3">
           <FaPalette className="inline-block text-cyan-300 mb-1" size={32} /> Ustawienia
         </h1>

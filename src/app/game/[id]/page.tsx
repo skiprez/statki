@@ -1,5 +1,5 @@
-
 "use client";
+import Link from "next/link";
 // --- React and Next.js imports ---
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useParams } from "next/navigation";
@@ -523,18 +523,22 @@ export default function GamePage() {
             <div className="bg-gradient-to-br from-green-700 via-cyan-900 to-green-900 px-6 xs:px-12 py-6 xs:py-10 rounded-3xl shadow-2xl border-4 border-green-400 text-center animate-fade-in w-full max-w-xs xs:max-w-md sm:max-w-lg">
               <div className="text-2xl xs:text-4xl font-extrabold text-green-200 mb-3 xs:mb-4 drop-shadow">Wygrałeś!</div>
               <div className="text-base xs:text-lg text-cyan-100 mb-4 xs:mb-6">Wszystkie statki przeciwnika zostały zatopione.</div>
-              <button className="px-6 xs:px-8 py-3 rounded-2xl font-bold text-base xs:text-lg shadow-lg bg-green-600 hover:bg-green-700 text-white transition-all duration-150 mt-2 pointer-events-auto" onClick={() => window.location.href = '/'}>
-                Wróć do lobby
-              </button>
+              <Link href="/" passHref legacyBehavior>
+                <a className="px-6 xs:px-8 py-3 rounded-2xl font-bold text-base xs:text-lg shadow-lg bg-green-600 hover:bg-green-700 text-white transition-all duration-150 mt-2 pointer-events-auto text-center block">
+                  Wróć do lobby
+                </a>
+              </Link>
             </div>
           )}
           {youLose && (
             <div className="bg-gradient-to-br from-red-700 via-cyan-900 to-red-900 px-6 xs:px-12 py-6 xs:py-10 rounded-3xl shadow-2xl border-4 border-red-400 text-center animate-fade-in w-full max-w-xs xs:max-w-md sm:max-w-lg">
               <div className="text-2xl xs:text-4xl font-extrabold text-red-200 mb-3 xs:mb-4 drop-shadow">Przegrałeś!</div>
               <div className="text-base xs:text-lg text-cyan-100 mb-4 xs:mb-6">Wszystkie twoje statki zostały zatopione.</div>
-              <button className="px-6 xs:px-8 py-3 rounded-2xl font-bold text-base xs:text-lg shadow-lg bg-red-600 hover:bg-red-700 text-white transition-all duration-150 mt-2 pointer-events-auto" onClick={() => window.location.href = '/'}>
-                Wróć do lobby
-              </button>
+              <Link href="/" passHref legacyBehavior>
+                <a className="px-6 xs:px-8 py-3 rounded-2xl font-bold text-base xs:text-lg shadow-lg bg-red-600 hover:bg-red-700 text-white transition-all duration-150 mt-2 pointer-events-auto text-center block">
+                  Wróć do lobby
+                </a>
+              </Link>
             </div>
           )}
         </section>
