@@ -1,1 +1,26 @@
+/* Custom scrollbar for room grid and other scrollable elements */
+.scrollbar-theme {
+	scrollbar-width: thin;
+	scrollbar-color: #22d3ee #181f2f;
+}
+
+.scrollbar-theme::-webkit-scrollbar {
+	width: 10px;
+	background: #181f2f;
+	border-radius: 8px;
+}
+.scrollbar-theme::-webkit-scrollbar-thumb {
+	background: linear-gradient(135deg, #0891b2 0%, #22d3ee 100%);
+	border-radius: 8px;
+	border: 2px solid #181f2f;
+}
+.scrollbar-theme::-webkit-scrollbar-thumb:hover {
+	background: linear-gradient(135deg, #06b6d4 0%, #67e8f9 100%);
+}
 @import "tailwindcss";
+
+body {
+	background: linear-gradient(135deg, #090e1a 0%, #111827 60%, #181f2f 100%) !important;
+	min-height: 100vh;
+	color: #f1f5f9;
+}
