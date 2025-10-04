@@ -1,0 +1,47 @@
+📅 Harmonogram prac (propozycja)
+
+Etap 1 – Planowanie (tydzień 1)
+
+Określenie celu projektu.
+
+Przydzielenie ról: frontend, backend, design.
+
+Wybór technologii: Next.js, Tailwind, Framer Motion, Clerk.
+
+Etap 2 – Podstawowe strony (tydzień 2–3)
+
+Strona startowa.
+
+Strona zasad gry.
+
+Strona logowania i rejestracji (mock).
+
+Etap 3 – Integracja (tydzień 4–5)
+
+Integracja Clerk (logowanie, rejestracja, sesje).
+
+Konfiguracja bazy danych (np. PostgreSQL/Supabase).
+
+Etap 4 – Rozgrywka (tydzień 6–8)
+
+Implementacja planszy 10x10.
+
+Obsługa logiki gry (strzały, trafienia, zmiana tury).
+
+Testy multiplayer (lokalne).
+
+Etap 5 – Udoskonalenia (tydzień 9–10)
+
+Animacje, dźwięki, UI/UX poprawki.
+
+Dodanie rankingu graczy.
+
+Przygotowanie do wdrożenia.
+
+Etap 6 – Deployment (tydzień 11)
+
+Hosting na Vercel.
+
+Testy końcowe.
+
+Publiczne uruchomienie.
