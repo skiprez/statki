@@ -1,16 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { supabase } from "@/lib/supabase";
 import { 
-  FaArrowLeft, 
   FaTrophy, 
   FaSkull, 
-  FaRedo, 
   FaCircle, 
   FaCrosshairs, 
   FaClock, 
@@ -48,7 +46,7 @@ export default function Connect4GamePage() {
   const [isDropping, setIsDropping] = useState(false);
   const [hoveredColumn, setHoveredColumn] = useState<number | null>(null);
   const [surrenderTimer, setSurrenderTimer] = useState(60); // 1 minute timer
-  const [lastMoveTime, setLastMoveTime] = useState<Date | null>(null);
+  // const [lastMoveTime, setLastMoveTime] = useState<Date | null>(null);
 
   // Initialize empty board
   const initializeBoard = (): Cell[][] => {
@@ -282,10 +280,10 @@ export default function Connect4GamePage() {
     const isDraw = isBoardFull(newBoard);
 
     // Update game state
-    const updateData: any = {
+    const updateData: Partial<Game> = {
       board: newBoard,
-      turn: hasWon || isDraw ? null : (playerNum === 1 ? "player2" : "player1")
-    };
+      turn: hasWon || isDraw ? undefined : (playerNum === 1 ? "player2" : "player1")
+    };    
 
     if (hasWon) {
       updateData.result = currentPlayer; // This is already "player1" or "player2"
@@ -306,19 +304,19 @@ export default function Connect4GamePage() {
   };
 
   // Get piece color
-  const getPieceColor = (cell: Cell) => {
-    if (cell === "player1") return "bg-red-500";
-    if (cell === "player2") return "bg-yellow-400";
-    return "bg-gray-700";
-  };
+  // const getPieceColor = (cell: Cell) => {
+  //   if (cell === "player1") return "bg-red-500";
+  //   if (cell === "player2") return "bg-yellow-400";
+  //   return "bg-gray-700";
+  // };
 
   // Get current player color
-  const getCurrentPlayerColor = () => {
-    if (!game) return "bg-gray-500";
-    if (game.turn === "player1") return "bg-red-500";
-    if (game.turn === "player2") return "bg-yellow-400";
-    return "bg-gray-500";
-  };
+  // const getCurrentPlayerColor = () => {
+  //   if (!game) return "bg-gray-500";
+  //   if (game.turn === "player1") return "bg-red-500";
+  //   if (game.turn === "player2") return "bg-yellow-400";
+  //   return "bg-gray-500";
+  // };
 
   // Surrender function
   const handleSurrender = async () => {
