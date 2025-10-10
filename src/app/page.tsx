@@ -1,12 +1,11 @@
 "use client";
 
 // Core React and state
+import Link from "next/link";
+
 import React, { useState } from "react";
-// Animation library
 import { motion } from "framer-motion";
-// Clerk authentication components
 import { SignedIn, SignedOut, useClerk } from "@clerk/nextjs";
-// Icons used in the UI
 import {
   FaShip,
   FaPlay,
@@ -17,25 +16,32 @@ import {
   FaSignOutAlt,
   FaUserEdit,
   FaCog,
+  FaRegCircle,
+  FaRegTimesCircle,
+  FaChessKing,
 } from "react-icons/fa";
 
-
-// Main homepage component - Modern Game Layout
 export default function HomePage() {
+  const games = [
+    { name: "Statki", route: "/queue-ships", icon: <FaShip className="mx-auto text-cyan-300" size={32} />, desc: "Zagraj w klasyczne statki" },
+    { name: "Connect 4", route: "/queue-connect4", icon: <FaRegCircle className="mx-auto text-yellow-300" size={32} />, desc: "Połącz cztery w linii" },
+    { name: "Kółko i krzyżyk", route: "/queue-tictactoe", icon: <FaRegTimesCircle className="mx-auto text-red-400" size={32} />, desc: "Klasyczna gra X/O" },
+    { name: "Szachy", route: "/queue-chess", icon: <FaChessKing className="mx-auto text-gray-300" size={32} />, desc: "Zagraj w szachy online" },
+  ];
   return (
-    <main className="min-h-screen text-gray-100 flex flex-col bg-gradient-to-br from-[#090e1a] via-[#111827] to-[#181f2f]">
+  <main className="min-h-screen text-gray-100 flex flex-col items-center bg-gradient-to-br from-[#090e1a] via-[#111827] to-[#181f2f]">
       {/* --- Top Navigation Bar --- */}
       <motion.nav
         initial={{ y: -30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="w-full flex flex-wrap items-center justify-between px-4 sm:px-6 md:px-8 py-3 md:py-4 shadow-lg z-10 bg-transparent"
+        className="w-full flex flex-wrap items-center justify-center px-4 sm:px-6 md:px-8 py-3 md:py-4 shadow-lg z-10 bg-transparent"
       >
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 mx-auto">
           <FaShip className="w-7 h-7 sm:w-8 sm:h-8 text-cyan-400" />
-          <span className="text-xl sm:text-2xl font-extrabold tracking-wide">Statki</span>
+          <span className="text-xl sm:text-2xl font-extrabold tracking-wide">Game Hub</span>
         </div>
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-6 mx-auto">
           <a href="/queue" className="hover:text-cyan-400 font-medium transition">Graj</a>
           <a href="/rules" className="hover:text-cyan-400 font-medium transition">Dokumentacja</a>
           <a href="https://github.com/skiprez/statki" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-cyan-400 font-medium transition">
@@ -43,10 +49,10 @@ export default function HomePage() {
             <span>Kod</span>
           </a>
         </div>
-        <div className="md:hidden flex items-center gap-2">
+        <div className="md:hidden flex items-center gap-2 mx-auto">
           {/* Mobile menu button could go here if needed */}
         </div>
-        <div className="ml-auto md:ml-0 mt-2 md:mt-0">
+        <div className="mt-2 md:mt-0 mx-auto">
           <SignedIn>
             <UserMenu />
           </SignedIn>
@@ -59,7 +65,7 @@ export default function HomePage() {
       </motion.nav>
 
       {/* --- Hero Section --- */}
-      <section className="flex-1 flex flex-col items-center justify-center text-center px-2 sm:px-4">
+  <section className="flex-1 flex flex-col items-center justify-center text-center px-2 sm:px-4 w-full">
         <motion.div
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -67,38 +73,44 @@ export default function HomePage() {
           className="w-full max-w-2xl mx-auto mt-8 sm:mt-12"
         >
           <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-300 bg-clip-text text-transparent drop-shadow-lg mb-3 sm:mb-4">
-            Statki Online
+            Game Hub of Jagoda & Hubert
           </h1>
           <p className="text-base xs:text-lg md:text-xl text-gray-300 mb-6 sm:mb-8">
-            Nowoczesna gra w statki dla dwóch osób. Dołącz do kolejki i zmierz się z innym graczem w czasie rzeczywistym!
+            Wybierz grę i baw się dobrze!
           </p>
-          <div className="flex flex-col xs:flex-row gap-3 xs:gap-4 justify-center items-center">
-            <SignedIn>
-              <motion.a
-                href="/queue"
-                className="inline-flex items-center gap-2 px-6 py-3 xs:px-8 xs:py-4 rounded-2xl bg-cyan-500/95 hover:bg-cyan-400 transition shadow-xl font-bold text-base xs:text-lg max-w-fit w-full xs:w-auto"
-                whileTap={{ scale: 0.97 }}
-              >
-                <FaPlay /> Zagraj teraz
-              </motion.a>
-            </SignedIn>
-            <SignedOut>
-              <motion.a
-                href="/auth"
-                className="inline-flex items-center gap-2 px-6 py-3 xs:px-8 xs:py-4 rounded-2xl bg-red-500/90 hover:bg-red-400 transition shadow-xl font-bold text-base xs:text-lg max-w-fit w-full xs:w-auto"
-                whileTap={{ scale: 0.97 }}
-              >
-                <FaSignInAlt /> Zaloguj się
-              </motion.a>
-            </SignedOut>
-            <motion.a
-              href="/rules"
-              className="inline-flex items-center gap-2 px-6 py-3 xs:px-8 xs:py-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition font-bold text-base xs:text-lg max-w-fit w-full xs:w-auto"
-              whileTap={{ scale: 0.97 }}
-            >
-              <FaBook /> 
-            </motion.a>
-          </div>
+          <SignedIn>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8 w-full max-w-3xl mx-auto">
+              {games.map((game) => (
+                <Link
+                  key={game.route}
+                  href={game.route}
+                  className={
+                    `group block rounded-xl shadow-lg border border-white/10 bg-gradient-to-br from-[#101a2b] via-[#18243a] to-[#1a2333] p-4 text-center transition-all duration-150
+                    hover:scale-[1.04] hover:shadow-xl hover:border-cyan-400/40 hover:bg-gradient-to-br hover:from-cyan-900 hover:via-blue-900 hover:to-cyan-700`
+                  }
+                  style={{ minHeight: "110px" }}
+                >
+                  <span className="mb-2 block drop-shadow transition-all duration-150 group-hover:scale-105">
+                    {game.icon}
+                  </span>
+                  <span className="text-lg font-bold mb-1 block bg-gradient-to-r from-cyan-300 via-blue-300 to-cyan-200 bg-clip-text text-transparent group-hover:from-cyan-400 group-hover:to-blue-400">
+                    {game.name}
+                  </span>
+                  <span className="text-xs text-cyan-100 opacity-80 group-hover:opacity-100">{game.desc}</span>
+                </Link>
+              ))}
+            </div>
+          </SignedIn>
+          <SignedOut>
+            <div className="mb-8 w-full max-w-3xl mx-auto flex flex-col items-center justify-center">
+              <div className="rounded-xl bg-black/30 border border-white/10 shadow-lg p-6 text-center">
+                <span className="text-xl font-bold text-cyan-300 mb-2 block">Zaloguj się, aby zobaczyć gry!</span>
+                <Link href="/auth" className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-cyan-600 hover:bg-cyan-500 transition shadow font-bold text-base text-white mt-4">
+                  <FaSignInAlt /> Zaloguj się
+                </Link>
+              </div>
+            </div>
+          </SignedOut>
         </motion.div>
 
         {/* --- Feature Cards --- */}
@@ -112,7 +124,7 @@ export default function HomePage() {
             <FeatureCard
               icon={<FaPlay className="w-7 h-7 text-cyan-400" />}
               title="Szybka rozgrywka"
-              desc="Dołącz do kolejki i graj bez czekania. System automatycznie dobiera przeciwnika."
+              desc="Dołącz do kolejki i graj bez czekania. Bezproblemowe doświadczenie."
             />
           </div>
           <div className="w-full flex justify-center md:block">
@@ -177,12 +189,12 @@ export default function HomePage() {
 
       {/* --- Footer --- */}
       <footer className="w-full text-center text-xs text-gray-500 py-4 mt-4">
-        <span>Statki © 2025 • Projekt szkolny</span>
+        <span>Game Hub © 2025 • Projekt szkolny</span>
       </footer>
     </main>
   );
 }
-// Feature card component
+
 function FeatureCard({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
   return (
     <motion.div
@@ -197,8 +209,6 @@ function FeatureCard({ icon, title, desc }: { icon: React.ReactNode; title: stri
   );
 }
 
-
-// User menu dropdown (shows when user is signed in)
 function UserMenu() {
   const { signOut } = useClerk();
   const [open, setOpen] = useState(false);
@@ -242,8 +252,6 @@ function UserMenu() {
   );
 }
 
-
-// Team member card component
 function RoleCard({ name, role, bullets }: { name: string; role: string; bullets: string[] }) {
   return (
     <motion.div

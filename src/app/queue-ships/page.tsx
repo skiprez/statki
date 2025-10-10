@@ -33,7 +33,7 @@ export default function RoomsPage() {
     const fetchRoomsAndStats = async () => {
       // Get all waiting rooms
       const { data } = await supabase
-        .from("games")
+        .from("ships")
         .select("*")
         .eq("status", "waiting")
         .is("player2", null)
@@ -41,7 +41,7 @@ export default function RoomsPage() {
       setRooms(data || []);
 
       // Get unique player1 ids
-  const player1Ids = Array.from(new Set((data || []).map((r: Room) => r.player1).filter(Boolean)));
+      const player1Ids = Array.from(new Set((data || []).map((r: Room) => r.player1).filter(Boolean)));
       if (player1Ids.length === 0) return;
 
       // Fetch usernames from our API route (logic from route.ts)
@@ -64,12 +64,12 @@ export default function RoomsPage() {
       for (const pid of player1Ids) {
         // Count wins
         const { count: winCount } = await supabase
-          .from("games")
+          .from("ships")
           .select("id", { count: "exact", head: true })
           .eq("result", pid);
         // Count losses
         const { count: lossCount } = await supabase
-          .from("games")
+          .from("ships")
           .select("id", { count: "exact", head: true })
           .or(`player1.eq.${pid},player2.eq.${pid}`)
           .neq("result", pid)
@@ -89,7 +89,7 @@ export default function RoomsPage() {
     if (!user) return;
     const interval = setInterval(async () => {
       const { data } = await supabase
-        .from("games")
+        .from("ships")
         .select("*")
         .or(`player1.eq.${user.id},player2.eq.${user.id}`)
         .eq("status", "ready")
@@ -97,7 +97,7 @@ export default function RoomsPage() {
         .limit(1)
         .single();
       if (data && data.id) {
-        router.push(`/game/${data.id}`);
+        router.push(`/ships/${data.id}`);
       }
     }, 2000);
     return () => clearInterval(interval);
@@ -109,7 +109,7 @@ export default function RoomsPage() {
     if (!user) return;
     setCreating(true);
     const { error } = await supabase
-      .from("games")
+      .from("ships")
       .insert({ player1: user.id, status: "waiting", turn: "player1" })
       .select()
       .single();
@@ -124,14 +124,14 @@ export default function RoomsPage() {
     if (!user) return;
     setJoiningId(roomId);
     const { data: updated, error } = await supabase
-      .from("games")
+      .from("ships")
       .update({ player2: user.id, status: "ready" })
       .eq("id", roomId)
       .select()
       .single();
     setJoiningId(null);
     if (updated && (updated as Room).id) {
-      router.push(`/game/${(updated as Room).id}`);
+      router.push(`/ships/${(updated as Room).id}`);
     }
     if (error) {
       alert("Błąd przy dołączaniu do pokoju: " + error.message);
